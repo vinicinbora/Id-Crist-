@@ -1,103 +1,153 @@
-import Image from "next/image";
+"use client";
+import { useState, useEffect } from 'react';
+import { doc, getDoc } from 'firebase/firestore';
+import { auth } from '@/firebase/firebaseAppConfig';
+import { db } from '@/firebase/firebaseAppConfig';
+import Image from 'next/image';
+import ProfileModal from '../components/ProfileModal/ProfileModal';
+import { useRouter } from "next/navigation";
+import { useAuthContext } from "../context/AuthContext";
+import { PiChurch } from "react-icons/pi";
+import { BiBible } from "react-icons/bi";
 
-export default function Home() {
+
+
+
+
+// Use a mesma interface do ProfileModal para consistência
+interface UserData {
+  nome?: string;
+  igreja?: string;
+  frase?: string;
+  fotoURL?: string | null;
+}
+
+export default function ProfilePage() {
+  const [userData, setUserData] = useState<UserData>({});
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [loading, setLoading] = useState(true);
+
+  const { userAuth, logout } = useAuthContext();
+  const router = useRouter();
+
+  console.log(userAuth);
+
+  useEffect(() => {
+    if (userAuth === null) {
+      router.push('/signIn');
+    }
+  }, [userAuth, router]);
+
+  useEffect(() => {
+    const fetchUserData = async () => {
+      const user = auth.currentUser;
+      if (!user) return;
+
+      try {
+        const userDocRef = doc(db, 'usuarios', user.uid);
+        const userDoc = await getDoc(userDocRef);
+
+        if (userDoc.exists()) {
+          setUserData(userDoc.data() as UserData);
+        }
+      } catch (error) {
+        console.error('Erro ao carregar perfil:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchUserData();
+  }, []);
+
+  // Função corrigida para aceitar UserData
+  const handleSave = (data: UserData) => {
+    setUserData(data);
+  };
+
+  if (loading) return <div className="text-center py-8">Carregando...</div>;
+
   return (
-    <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
-      <main className="flex flex-col gap-[32px] row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="list-inside list-decimal text-sm/6 text-center sm:text-left font-[family-name:var(--font-geist-mono)]">
-          <li className="mb-2 tracking-[-.01em]">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] px-1 py-0.5 rounded font-[family-name:var(--font-geist-mono)] font-semibold">
-              src/app/page.tsx
-            </code>
-            .
-          </li>
-          <li className="tracking-[-.01em]">
-            Save and see your changes instantly.
-          </li>
-        </ol>
+    <>
 
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:w-auto"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 w-full sm:w-auto md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
+      <div className='w-full h-16 bg-black flex justify-between items-center mb-4 p-2 '>
+        <h1 className='text-white text-2xl font-bold'>ID Cristã</h1>
+        <button onClick={() => logout()} className="cursor-pointer text-white border-2 bg-black py-2 px-5 rounded-full">Sair</button>
+      </div>
+
+      <div className="max-w-[100%] lg:max-w-5xl mx-auto p-4">
+
+        <div className='w-full flex flex-col justify-center items-center'>
+
+          <div className="w-full flex justify-between items-center mt-7">
+            {userData.fotoURL ? (
+              <Image
+                src={userData.fotoURL}
+                alt="Foto de perfil"
+                width={100}
+                height={100}
+                className="rounded-full object-cover inset-0 bg-gradient-to-r from-blue-500 via-purple-500 to-emerald-300 p-1 mb-4 w-[100px] h-[100px]"
+              />
+            ) : (
+              <div className="w-32 h-32 rounded-full bg-gray-200 flex items-center justify-center mb-4">
+                <span className="text-gray-400">Sem foto</span>
+              </div>
+            )}
+
+            <div>
+              <button
+                onClick={() => setIsModalOpen(true)}
+                className="cursor-pointer border-2 border-[#1083fe] py-2 px-3 flex justify-center items-center gap-2 text-[#1083fe] rounded-full text-sm"
+              >
+
+                Editar Perfil
+              </button>
+            </div>
+
+          </div>
+
+
+          <div className='w-full flex justify-between items-center'>
+            <div className='w-full'>
+              <p className='text-gray-500'>Nome:</p>
+              <h1 className="text-2xl text-black font-bold mb-2">
+                {userData.nome || '...'}
+              </h1>
+            </div>
+
+            <h1 className='text-black'>Desde:</h1>
+
+          </div>
+
+
+
+          <div className='mt-6'>
+
+            <div className='w-full'>
+              <p className='text-gray-500 flex items-center gap-2'><PiChurch size={20} />Igreja:</p>
+              <p className="text-2xl font-bold gap-2 flex items-center  text-black rounded-2xl p-3 mb-2">
+                {userData.igreja || '...'}
+              </p>
+            </div>
+
+            <div className='w-full'>
+              <p className='text-gray-500 flex items-center gap-2'><BiBible size={20} /> Um versículo:</p>
+              <p className="text-[18px] bg-amber-50 font-normal gap-2 flex items-center text-black  rounded-2xl p-4 mb-2">
+                {userData.frase || '...'}
+              </p>
+            </div>
+          </div>
+
         </div>
-      </main>
-      <footer className="row-start-3 flex gap-[24px] flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
-    </div>
+
+        <ProfileModal
+          isOpen={isModalOpen}
+          onClose={() => setIsModalOpen(false)}
+          onSave={handleSave} // Agora compatível com ProfileModalProps
+        />
+
+
+      </div>
+    </>
   );
 }

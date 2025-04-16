@@ -121,7 +121,7 @@ export default function ProfilePage() {
 
 
 
-          <div className='mt-6'>
+          <div className='w-full mt-6'>
 
             <div className='w-full'>
               <p className='text-gray-500 flex items-center gap-2'><PiChurch size={20} />Igreja:</p>

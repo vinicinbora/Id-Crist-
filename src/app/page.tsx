@@ -4,10 +4,13 @@ import { doc, getDoc } from 'firebase/firestore';
 import { auth } from '@/firebase/firebaseAppConfig';
 import { db } from '@/firebase/firebaseAppConfig';
 import Image from 'next/image';
+import Link from "next/link";
 import ProfileModal from '../components/ProfileModal/ProfileModal';
-import Header from '@/components/Header/header';
-
-
+import { useRouter, usePathname } from "next/navigation";
+import { useAuthContext } from "../context/AuthContext";
+import { IoNotifications } from "react-icons/io5";
+import { FaReadme } from "react-icons/fa6";
+import { BiLogOut } from "react-icons/bi";
 
 
 
@@ -29,8 +32,18 @@ export default function ProfilePage() {
   const [userData, setUserData] = useState<UserData>({});
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [loading, setLoading] = useState(true);
+  const pathname = usePathname(); // Hook para obter a rota atual
 
-  
+  const { userAuth, logout } = useAuthContext();
+  const router = useRouter();
+
+  console.log(userAuth);
+
+  useEffect(() => {
+    if (userAuth === null) {
+      router.push('/signIn');
+    }
+  }, [userAuth, router]);
 
   useEffect(() => {
     const fetchUserData = async () => {
@@ -64,8 +77,37 @@ export default function ProfilePage() {
   return (
     <>
 
-      <Header/>
-      
+
+<div className="fixed top-0 left-0 right-0 w-full h-16 bg-[#262831] flex justify-between items-center p-4 z-50">
+      <h1 className="text-white text-2xl font-bold">ID Cristão</h1>
+      <div className="flex items-center gap-3">
+        {/* Ícone 1 - Daily */}
+        <Link href="/daily" passHref>
+          <button className={`cursor-pointer rounded-full p-2 transition-colors ${
+            pathname === '/daily' ? 'text-blue-400 bg-white/10' : 'text-white'
+          }`}>
+            <FaReadme size={25} />
+          </button>
+        </Link>
+
+        {/* Ícone 2 - Notificações */}
+        <Link href="/notificacao" passHref>
+          <button className={`cursor-pointer rounded-full p-2 transition-colors ${
+            pathname === '/notifications' ? 'text-blue-400 bg-white/10' : 'text-white'
+          }`}>
+            <IoNotifications size={25} />
+          </button>
+        </Link>
+
+        {/* Ícone 3 - Logout (sem Link, apenas ação) */}
+        <button
+          onClick={() => logout()}
+          className="cursor-pointer text-white rounded-full p-2 hover:bg-white/10"
+        >
+          <BiLogOut size={25} />
+        </button>
+      </div>
+    </div>
 
       <div className="max-w-[100%] lg:max-w-5xl mt-14 mx-auto p-4">
 

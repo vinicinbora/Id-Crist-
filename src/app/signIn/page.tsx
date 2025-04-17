@@ -6,7 +6,7 @@ import signIn from "../../firebase/auth/signIn";
 import { useRouter } from 'next/navigation';
 
 
-export default function SignIn() {
+export default function Signin() {
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
     const router = useRouter()

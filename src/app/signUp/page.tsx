@@ -38,7 +38,7 @@ export default function Page() {
                     </label>
                     <div className="flex gap-6 mt-7">
                     <button type="submit" className="cursor-pointer">Cadastrar</button>
-                    <button type="button" onClick={() => router.push("/signIn")} className="cursor-pointer">Entrar</button>
+                    <button type="button" onClick={() => router.push("/signin")} className="cursor-pointer">Entrar</button>
                     </div>
                 </form>
             </section>

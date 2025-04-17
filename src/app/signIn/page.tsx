@@ -50,7 +50,7 @@ export default function SignIn() {
                     </label>
                     <div className="flex gap-6 mt-10">
                     <button type="submit" className="cursor-pointer text-white">Entrar</button>
-                    <button type="button" onClick={() => router.push("/signUp")} className="cursor-pointer">Cadastrar</button>
+                    <button type="button" onClick={() => router.push("/signup")} className="cursor-pointer">Cadastrar</button>
                     </div>
                 </form>
                 

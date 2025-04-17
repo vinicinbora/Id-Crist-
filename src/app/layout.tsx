@@ -3,6 +3,7 @@ import './globals.css'
 import { AuthContextProvider } from '../context/AuthProvider'
 import { Roboto } from 'next/font/google';
 
+
 const mainFontFamily = Roboto({
   weight : ['400'],
   subsets: ['latin'],
@@ -23,6 +24,7 @@ export default function RootLayout({
     <html lang="pt-BR">
       <body className={mainFontFamily.className} cz-shortcut-listen="true">
       <AuthContextProvider>
+        
         {children}
         </AuthContextProvider>
       </body>

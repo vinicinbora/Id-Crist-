@@ -5,10 +5,11 @@ import { auth } from '@/firebase/firebaseAppConfig';
 import { db } from '@/firebase/firebaseAppConfig';
 import Image from 'next/image';
 import ProfileModal from '../components/ProfileModal/ProfileModal';
-import { useRouter } from "next/navigation";
-import { useAuthContext } from "../context/AuthContext";
-import { BiBible } from "react-icons/bi";
-import { IoNotifications } from "react-icons/io5";
+import Header from '@/components/Header/header';
+
+
+
+
 
 
 
@@ -29,16 +30,7 @@ export default function ProfilePage() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [loading, setLoading] = useState(true);
 
-  const { userAuth, logout } = useAuthContext();
-  const router = useRouter();
-
-  console.log(userAuth);
-
-  useEffect(() => {
-    if (userAuth === null) {
-      router.push('/signIn');
-    }
-  }, [userAuth, router]);
+  
 
   useEffect(() => {
     const fetchUserData = async () => {
@@ -72,25 +64,18 @@ export default function ProfilePage() {
   return (
     <>
 
+      <Header/>
+      
 
-      <div className='w-full h-16 bg-[#262831] flex justify-between items-center mb-4 p-2 '>
-        <h1 className='text-white text-2xl font-bold'>ID Cristã</h1>
-        <div className='flex items-center gap-2'>
-          <button className='cursor-pointer'><IoNotifications size={25} /></button>
-
-          <button onClick={() => logout()} className="cursor-pointer text-white border-2 px-2 py-1 rounded-full">Sair</button>
-        </div>
-      </div>
-
-      <div className="max-w-[100%] lg:max-w-5xl mx-auto p-4">
+      <div className="max-w-[100%] lg:max-w-5xl mt-14 mx-auto p-4">
 
         <div className='w-full flex flex-col justify-center items-center'>
 
           <div className="inset-0 bg-cover bg-center w-full h-36 rounded-2xl overflow-hidden"
-          style={{ backgroundImage: `url(${userData.fotoURL})` }}
+            style={{ backgroundImage: `url(${userData.fotoURL})` }}
           >
 
-           
+
 
           </div>
 
@@ -140,14 +125,14 @@ export default function ProfilePage() {
 
             <div className='w-full'>
               <p className='text-gray-500 flex items-center gap-2'><span>⛪</span>Igreja:</p>
-              <p className="text-2xl font-bold gap-2 flex items-center  text-white rounded-2xl p-3 mb-2">
+              <p className="text-[18px] font-bold gap-2 flex items-center  text-white rounded-2xl p-3 mb-2">
                 {userData.igreja || '...'}
               </p>
             </div>
 
             <div className='w-full'>
               <p className='text-gray-500 flex items-center mb-1 gap-2'><span>📖</span>O que Jesus é para mim:</p>
-              <p className="text-[18px] bg-[#262831] font-normal gap-2 flex items-center text-white rounded-2xl p-4 mb-2">
+              <p className="text-[18px]  font-normal gap-2 flex items-center text-white rounded-2xl p-4 mb-2">
                 {userData.frase || '...'}
               </p>
             </div>

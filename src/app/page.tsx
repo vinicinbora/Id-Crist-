@@ -7,8 +7,10 @@ import Image from 'next/image';
 import ProfileModal from '../components/ProfileModal/ProfileModal';
 import { useRouter } from "next/navigation";
 import { useAuthContext } from "../context/AuthContext";
-import { PiChurch } from "react-icons/pi";
 import { BiBible } from "react-icons/bi";
+import { IoNotifications } from "react-icons/io5";
+
+
 
 
 
@@ -70,23 +72,36 @@ export default function ProfilePage() {
   return (
     <>
 
-      <div className='w-full h-16 bg-black flex justify-between items-center mb-4 p-2 '>
+
+      <div className='w-full h-16 bg-[#262831] flex justify-between items-center mb-4 p-2 '>
         <h1 className='text-white text-2xl font-bold'>ID Cristã</h1>
-        <button onClick={() => logout()} className="cursor-pointer text-white border-2 bg-black py-2 px-5 rounded-full">Sair</button>
+        <div className='flex items-center gap-2'>
+          <button className='cursor-pointer'><IoNotifications size={25} /></button>
+
+          <button onClick={() => logout()} className="cursor-pointer text-white border-2 px-2 py-1 rounded-full">Sair</button>
+        </div>
       </div>
 
       <div className="max-w-[100%] lg:max-w-5xl mx-auto p-4">
 
         <div className='w-full flex flex-col justify-center items-center'>
 
-          <div className="w-full flex justify-between items-center mt-7">
+          <div className="inset-0 bg-cover bg-center w-full h-36 rounded-2xl overflow-hidden"
+          style={{ backgroundImage: `url(${userData.fotoURL})` }}
+          >
+
+           
+
+          </div>
+
+          <div className="w-full flex justify-between mb-3 -mt-9 items-end ">
             {userData.fotoURL ? (
               <Image
                 src={userData.fotoURL}
                 alt="Foto de perfil"
                 width={100}
                 height={100}
-                className="rounded-full object-cover inset-0 bg-gradient-to-r from-blue-500 via-purple-500 to-emerald-300 p-1 mb-4 w-[100px] h-[100px]"
+                className=" rounded-full object-cover w-[100px] h-[100px]  inset-0 bg-gradient-to-r from-blue-500 via-blue-800 to-blue-300 p-1"
               />
             ) : (
               <div className="w-32 h-32 rounded-full bg-gray-200 flex items-center justify-center mb-4">
@@ -97,7 +112,7 @@ export default function ProfilePage() {
             <div>
               <button
                 onClick={() => setIsModalOpen(true)}
-                className="cursor-pointer border-2 border-[#1083fe] py-2 px-3 flex justify-center items-center gap-2 text-[#1083fe] rounded-full text-sm"
+                className="cursor-pointer border-2 bg-[#262831]  px-2 py-1 flex justify-center items-center gap-2 text-white rounded-full text-sm"
               >
 
                 Editar Perfil
@@ -110,12 +125,12 @@ export default function ProfilePage() {
           <div className='w-full flex justify-between items-center'>
             <div className='w-full'>
               <p className='text-gray-500'>Nome:</p>
-              <h1 className="text-2xl text-black font-bold mb-2">
+              <h1 className="text-2xl text-white font-bold mb-2">
                 {userData.nome || '...'}
               </h1>
             </div>
 
-            <h1 className='text-black'>Desde:</h1>
+
 
           </div>
 
@@ -124,19 +139,21 @@ export default function ProfilePage() {
           <div className='w-full mt-6'>
 
             <div className='w-full'>
-              <p className='text-gray-500 flex items-center gap-2'><PiChurch size={20} />Igreja:</p>
-              <p className="text-2xl font-bold gap-2 flex items-center  text-black rounded-2xl p-3 mb-2">
+              <p className='text-gray-500 flex items-center gap-2'><span>⛪</span>Igreja:</p>
+              <p className="text-2xl font-bold gap-2 flex items-center  text-white rounded-2xl p-3 mb-2">
                 {userData.igreja || '...'}
               </p>
             </div>
 
             <div className='w-full'>
-              <p className='text-gray-500 flex items-center gap-2'><BiBible size={20} /> Um versículo:</p>
-              <p className="text-[18px] bg-amber-50 font-normal gap-2 flex items-center text-black  rounded-2xl p-4 mb-2">
+              <p className='text-gray-500 flex items-center mb-1 gap-2'><span>📖</span>O que Jesus é para mim:</p>
+              <p className="text-[18px] bg-[#262831] font-normal gap-2 flex items-center text-white rounded-2xl p-4 mb-2">
                 {userData.frase || '...'}
               </p>
             </div>
           </div>
+
+
 
         </div>
 
@@ -145,6 +162,7 @@ export default function ProfilePage() {
           onClose={() => setIsModalOpen(false)}
           onSave={handleSave} // Agora compatível com ProfileModalProps
         />
+
 
 
       </div>

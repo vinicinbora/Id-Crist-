@@ -180,7 +180,7 @@ export default function ProfileModal({ isOpen, onClose, onSave }: ProfileModalPr
           </div>
 
           <div className="mb-4">
-            <label className="block text-sm text-black font-medium  mb-1">Um versículo</label>
+            <label className="block text-sm text-black font-medium  mb-1">O que Jesus é para você?</label>
             <input
               type="text"
               value={frase}

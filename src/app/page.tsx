@@ -28,7 +28,7 @@ interface UserData {
   fotoURL?: string | null;
 }
 
-export default function ProfilePage() {
+export default function ProfilePage( ) {
   const [userData, setUserData] = useState<UserData>({});
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [loading, setLoading] = useState(true);
@@ -79,7 +79,7 @@ export default function ProfilePage() {
 
 
 <div className="fixed top-0 left-0 right-0 w-full h-16 bg-[#262831] flex justify-between items-center p-4 z-50">
-      <h1 className="text-white text-2xl font-bold">ID Cristão</h1>
+      <h1 className="text-white text-2xl font-bold">ID Cristã</h1>
       <div className="flex items-center gap-3">
         {/* Ícone 1 - Daily */}
         <Link href="/daily" passHref>
